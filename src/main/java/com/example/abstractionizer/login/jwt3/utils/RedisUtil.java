@@ -25,20 +25,20 @@ public class RedisUtil {
             return true;
         }catch(Exception var1){
             try{
-                log.error("Write Obj Failure, key: {} obj: {}", key, this.objectMapper.writeValueAsString(obj), var1);
+                log.error("Write Obj failure, key: {} obj: {}", key, this.objectMapper.writeValueAsString(obj), var1);
             }catch(JsonProcessingException var2){
-                log.error("RedisUtil write obj to json error: ", var2);
+                log.error("Write Obj to json error: ", var2);
             }
-            return false;
         }
+        return false;
     }
 
     public <T> T get(@NonNull String key, @NonNull Class<T> cls){
         Object obj;
         try{
             obj = this.redisTemplate.boundValueOps(key).get();
-        }catch(Exception e){
-            log.error("Get obj failed, key: {}", key);
+        }catch(Exception var3){
+            log.error("Get Obj failed, key: {}", key, var3);
             return null;
         }
         return cls.cast(obj);
@@ -48,7 +48,7 @@ public class RedisUtil {
         if(key.isEmpty()){
             return false;
         }else{
-            return Objects.nonNull(this.get(key, Object.class));
+            return !Objects.isNull(this.get(key, Object.class));
         }
     }
 

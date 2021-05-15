@@ -1,5 +1,6 @@
 package com.example.abstractionizer.login.jwt3.utils;
 
+import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -31,9 +32,14 @@ public class JwtUtil {
         return getClaimsFromToken(token, Claims::getSubject);
     }
 
-    public String generateToken(String username){
+    public UserInfoVo getUserInfoFromToken(String token){
+        return (UserInfoVo)getAllFromToken(token).get("UserInfo");
+    }
+
+    public String generateToken(String username, UserInfoVo userInfoVo){
         return Jwts.builder()
                 .setSubject(username)
+                .claim("UserInfo", userInfoVo)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + validity))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
