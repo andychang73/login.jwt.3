@@ -3,16 +3,21 @@ package com.example.abstractionizer.login.jwt3.login.businesses.impl;
 import com.example.abstractionizer.login.jwt3.constants.RedisConstant;
 import com.example.abstractionizer.login.jwt3.db.rmdb.entities.User;
 import com.example.abstractionizer.login.jwt3.enums.ErrorCode;
+import com.example.abstractionizer.login.jwt3.enums.UserStatus;
 import com.example.abstractionizer.login.jwt3.exceptions.CustomException;
 import com.example.abstractionizer.login.jwt3.login.businesses.UserBusiness;
+import com.example.abstractionizer.login.jwt3.login.services.UserLoginService;
 import com.example.abstractionizer.login.jwt3.login.services.UserRegistrationService;
 import com.example.abstractionizer.login.jwt3.login.services.UserService;
+import com.example.abstractionizer.login.jwt3.models.bo.UserLoginBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserRegisterBo;
 import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
+import com.example.abstractionizer.login.jwt3.models.vo.UserLoginVo;
 import com.example.abstractionizer.login.jwt3.utils.MD5Util;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Slf4j
@@ -22,6 +27,7 @@ public class UserBusinessImpl implements UserBusiness {
 
     private final UserService userService;
     private final UserRegistrationService userRegistrationService;
+    private final UserLoginService userLoginService;
 
     @Override
     public void register(UserRegisterBo bo) {
@@ -55,4 +61,30 @@ public class UserBusinessImpl implements UserBusiness {
 
         return new UserInfoVo().setUserId(user.getId()).setUsername(user.getUsername()).setEmail(user.getEmail()).setPhone(user.getPhone());
     }
+
+    @Override
+    public UserLoginVo login(UserLoginBo bo) {
+        User user = userService.getUser(bo.getUsername()).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CREDENTIAL));
+
+        userLoginService.authenticate(bo, user.getPassword());
+
+        if(user.getStatus() != UserStatus.NORMAL.getStatus()){
+            throw new CustomException(ErrorCode.ACCOUNT_FROZEN);
+        }
+
+        if(userLoginService.isUserCurrentlyLoggedIn(bo.getUsername())){
+            throw new CustomException(ErrorCode.USER_LOGGED_IN);
+        }
+
+
+        UserInfoVo userInfoVo = new UserInfoVo().setUserId(user.getId()).setUsername(user.getUsername()).setEmail(user.getEmail()).setPhone(user.getPhone());
+
+        final String jwt = userLoginService.generateToken(user.getUsername(), userInfoVo);
+        userLoginService.setLoggedInUser(user.getUsername(), jwt);
+        userService.updateLastLoginTime(user.getUsername());
+
+        return new UserLoginVo().setToken(jwt);
+    }
+
+
 }

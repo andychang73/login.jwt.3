@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -25,7 +27,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getUser(String username) {
+        return Optional.ofNullable(userMapper.getByUsername(username));
+    }
+
+    @Override
     public boolean isUserExists(String username) {
         return userMapper.countByUsername(username) > 0;
+    }
+
+    @Override
+    public void updateLastLoginTime(String username) {
+        if(userMapper.updateLastLoginTime(username) != 1){
+            throw new CustomException(ErrorCode.DATA_UPDATE_FAILED);
+        }
     }
 }

@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.abstractionizer.login.jwt3.db.rmdb.mappers.UserMapper">
+    <update id="updateLastLoginTime">
+        UPDATE user
+        set last_login_time = NOW()
+        WHERE username = #{username}
+    </update>
 
     <select id="countByUsername" resultType="java.lang.Integer">
         SELECT COUNT(id)
-        FROM USER
+        FROM user
+        WHERE username = #{username}
+    </select>
+    <select id="getByUsername" resultType="com.example.abstractionizer.login.jwt3.db.rmdb.entities.User">
+        SELECT *
+        FROM user
         WHERE username = #{username}
     </select>
 </mapper>

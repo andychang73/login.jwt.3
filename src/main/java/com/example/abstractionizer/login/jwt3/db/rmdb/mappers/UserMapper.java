@@ -11,4 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper extends BaseMapper<User> {
 
     int countByUsername(@Param("username") String username);
+
+    User getByUsername(@Param("username") String username);
+
+    int updateLastLoginTime(@Param("username") String username);
 }

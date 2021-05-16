@@ -1,8 +1,10 @@
 package com.example.abstractionizer.login.jwt3.login.controllers;
 
 import com.example.abstractionizer.login.jwt3.login.businesses.UserBusiness;
+import com.example.abstractionizer.login.jwt3.models.bo.UserLoginBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserRegisterBo;
 import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
+import com.example.abstractionizer.login.jwt3.models.vo.UserLoginVo;
 import com.example.abstractionizer.login.jwt3.responses.SuccessResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +27,10 @@ public class UserController {
     @GetMapping
     public SuccessResponse<UserInfoVo> validate(@RequestParam("token") String uuid){
         return new SuccessResponse<>(userBusiness.validation(uuid));
+    }
+
+    @PostMapping("/login")
+    public SuccessResponse<UserLoginVo> login(@RequestBody @Valid UserLoginBo bo){
+        return new SuccessResponse<>(userBusiness.login(bo));
     }
 }
