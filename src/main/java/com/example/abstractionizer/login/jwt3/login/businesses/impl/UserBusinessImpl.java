@@ -113,7 +113,11 @@ public class UserBusinessImpl implements UserBusiness {
         if(!Objects.equals(bo.getNewPassword(), bo.getNewPassword2())){
             throw new CustomException(ErrorCode.NEW_PASSWORD_INCONSISTENCY);
         }
-        userService.updatePassword(userId, bo.getNewPassword());
+        userService.updatePassword(userId, MD5Util.md5(bo.getNewPassword()));
+    }
+
+    public static void main(String[] args){
+        System.out.println(MD5Util.md5("Abc1234567!"));
     }
 
 
