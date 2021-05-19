@@ -5,6 +5,8 @@ import com.example.abstractionizer.login.jwt3.db.rmdb.mappers.UserMapper;
 import com.example.abstractionizer.login.jwt3.enums.ErrorCode;
 import com.example.abstractionizer.login.jwt3.exceptions.CustomException;
 import com.example.abstractionizer.login.jwt3.login.services.UserService;
+import com.example.abstractionizer.login.jwt3.models.bo.UserUpdateBo;
+import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,9 +39,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isUserExists(Integer userId, String username) {
+        return userMapper.countByUserIdOrUsername(userId, username) > 0;
+    }
+
+    @Override
     public void updateLastLoginTime(String username) {
         if(userMapper.updateLastLoginTime(username) != 1){
             throw new CustomException(ErrorCode.DATA_UPDATE_FAILED);
         }
+    }
+
+    @Override
+    public void updateUserInfo(Integer userId, UserUpdateBo bo) {
+        if(userMapper.updateUserInfo(userId, bo) != 1){
+            throw new CustomException(ErrorCode.DATA_UPDATE_FAILED);
+        }
+    }
+
+    @Override
+    public UserInfoVo getUser(Integer userId, String username) {
+        return userMapper.getByUserIdOrUsername(userId, username);
     }
 }

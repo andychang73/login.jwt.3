@@ -7,9 +7,9 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class UserLoginBo {
 
-    @NotEmpty
+    @NotEmpty(message = "must not be null nor empty")
     private String username;
 
-    @NotEmpty
+    @NotEmpty(message = "must not be null nor empty")
     private String password;
 }

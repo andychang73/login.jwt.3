@@ -31,4 +31,14 @@ public class User {
     private Date lastLoginTime;
 
     private Integer status;
+
+    public User setId(Integer id){
+        this.id = id;
+        return this;
+    }
+
+    public User setUsername(String username){
+        this.username = username;
+        return this;
+    }
 }

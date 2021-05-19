@@ -11,9 +11,11 @@ import com.example.abstractionizer.login.jwt3.login.services.UserRegistrationSer
 import com.example.abstractionizer.login.jwt3.login.services.UserService;
 import com.example.abstractionizer.login.jwt3.models.bo.UserLoginBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserRegisterBo;
+import com.example.abstractionizer.login.jwt3.models.bo.UserUpdateBo;
 import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
 import com.example.abstractionizer.login.jwt3.models.vo.UserLoginVo;
 import com.example.abstractionizer.login.jwt3.utils.MD5Util;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,7 +65,7 @@ public class UserBusinessImpl implements UserBusiness {
     }
 
     @Override
-    public UserLoginVo login(UserLoginBo bo) {
+    public UserLoginVo login(UserLoginBo bo) throws JsonProcessingException {
         User user = userService.getUser(bo.getUsername()).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CREDENTIAL));
 
         userLoginService.authenticate(bo, user.getPassword());
@@ -84,6 +86,16 @@ public class UserBusinessImpl implements UserBusiness {
         userService.updateLastLoginTime(user.getUsername());
 
         return new UserLoginVo().setToken(jwt);
+    }
+
+    @Override
+    public UserInfoVo updateInfo(Integer userId, UserUpdateBo bo) {
+        if(!userService.isUserExists(userId, null)){
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        userService.updateUserInfo(userId, bo);
+
+        return userService.getUser(userId, null);
     }
 
 

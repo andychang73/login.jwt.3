@@ -9,6 +9,7 @@ import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
 import com.example.abstractionizer.login.jwt3.utils.JwtUtil;
 import com.example.abstractionizer.login.jwt3.utils.MD5Util;
 import com.example.abstractionizer.login.jwt3.utils.RedisUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

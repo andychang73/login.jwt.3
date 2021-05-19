@@ -12,8 +12,8 @@ public enum ErrorCode implements BaseError{
     INVALID_CREDENTIAL(HttpStatus.INTERNAL_SERVER_ERROR, "10006", "Invalid Credential"),
     ACCOUNT_FROZEN(HttpStatus.INTERNAL_SERVER_ERROR, "10007", "Your account has been frozen, please contact admin"),
     ACCOUNT_VALIDATION_EXPIRED(HttpStatus.NOT_FOUND, "10008", "Account validation is expired"),
-    ACCOUNT_NOT_VALIDATED(HttpStatus.INTERNAL_SERVER_ERROR, "10009", "Account has not yet been validated")
-
+    ACCOUNT_NOT_VALIDATED(HttpStatus.INTERNAL_SERVER_ERROR, "10009", "Account has not yet been validated"),
+    NO_INFO_TO_UPDATE(HttpStatus.BAD_REQUEST, "10010", "No update info")
     ;
 
     HttpStatus httpStatus;
