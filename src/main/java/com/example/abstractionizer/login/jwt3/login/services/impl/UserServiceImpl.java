@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUser(String username) {
-        return Optional.ofNullable(userMapper.getByUsername(username));
+    public Optional<User> getUser(Integer userId, String username) {
+        return Optional.ofNullable(userMapper.getByIdOrUsername(userId, username));
     }
 
     @Override
@@ -58,7 +58,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoVo getUser(Integer userId, String username) {
-        return userMapper.getByUserIdOrUsername(userId, username);
+    public void updatePassword(Integer userId, String password) {
+        if(userMapper.updatePassword(userId, password) != 1){
+            throw new CustomException(ErrorCode.DATA_UPDATE_FAILED);
+        }
+    }
+
+    @Override
+    public UserInfoVo getUserInfo(Integer userId, String username) {
+        return userMapper.selectByIdOrUsername(userId, username);
     }
 }

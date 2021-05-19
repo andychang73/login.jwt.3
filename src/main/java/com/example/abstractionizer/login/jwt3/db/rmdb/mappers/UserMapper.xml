@@ -22,16 +22,28 @@
         </set>
         WHERE id = #{user_id}
     </update>
+    <update id="updatePassword">
+        UPDATE user
+        SET password = #{password}
+        WHERE id = #{user_id}
+    </update>
 
     <select id="countByUsername" resultType="java.lang.Integer">
         SELECT COUNT(id)
         FROM user
         WHERE username = #{username}
     </select>
-    <select id="getByUsername" resultType="com.example.abstractionizer.login.jwt3.db.rmdb.entities.User">
+    <select id="getByIdOrUsername" resultType="com.example.abstractionizer.login.jwt3.db.rmdb.entities.User">
         SELECT *
         FROM user
-        WHERE username = #{username}
+        <where>
+            <if test="user_id != null and user_id > 0">
+                AND id = #{user_id}
+            </if>
+            <if test="username != null and username != ''">
+                AND username = #{username}
+            </if>
+        </where>
     </select>
     <select id="countByUserIdOrUsername" resultType="java.lang.Integer">
         SELECT COUNT(id)
@@ -53,7 +65,7 @@
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="getByUserIdOrUsername" resultMap="UserInfoVo">
+    <select id="selectByIdOrUsername" resultMap="UserInfoVo">
         SELECT id, username, email, phone
         FROM user
         <where>

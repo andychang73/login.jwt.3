@@ -10,7 +10,7 @@ public interface UserService {
 
     User create(User user);
 
-    Optional<User> getUser(String username);
+    Optional<User> getUser(Integer userId, String username);
 
     boolean isUserExists(String username);
 
@@ -20,6 +20,8 @@ public interface UserService {
 
     void updateUserInfo(Integer userId, UserUpdateBo user);
 
-    UserInfoVo getUser(Integer userId, String username);
+    void updatePassword(Integer userId, String password);
+
+    UserInfoVo getUserInfo(Integer userid, String username);
 
 }

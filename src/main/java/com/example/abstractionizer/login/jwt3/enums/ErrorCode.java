@@ -13,7 +13,9 @@ public enum ErrorCode implements BaseError{
     ACCOUNT_FROZEN(HttpStatus.INTERNAL_SERVER_ERROR, "10007", "Your account has been frozen, please contact admin"),
     ACCOUNT_VALIDATION_EXPIRED(HttpStatus.NOT_FOUND, "10008", "Account validation is expired"),
     ACCOUNT_NOT_VALIDATED(HttpStatus.INTERNAL_SERVER_ERROR, "10009", "Account has not yet been validated"),
-    NO_INFO_TO_UPDATE(HttpStatus.BAD_REQUEST, "10010", "No update info")
+    NO_INFO_TO_UPDATE(HttpStatus.BAD_REQUEST, "10010", "No update info"),
+    NEW_OLD_PASSWORD_SAME(HttpStatus.BAD_REQUEST, "10011", "New password and old password cannot be the same"),
+    NEW_PASSWORD_INCONSISTENCY(HttpStatus.BAD_REQUEST, "10012", "New passwords must be the same")
     ;
 
     HttpStatus httpStatus;

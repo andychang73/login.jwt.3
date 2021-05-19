@@ -1,6 +1,7 @@
 package com.example.abstractionizer.login.jwt3.login.controllers;
 
 import com.example.abstractionizer.login.jwt3.login.businesses.UserBusiness;
+import com.example.abstractionizer.login.jwt3.models.bo.ChangePasswordBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserLoginBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserRegisterBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserUpdateBo;
@@ -38,11 +39,17 @@ public class UserController extends BaseController{
 
     @PutMapping("/update")
     public SuccessResponse<UserInfoVo> update(@RequestHeader("Authorization") String token,@RequestBody @Valid UserUpdateBo bo) throws JsonProcessingException {
-        return new SuccessResponse<>(userBusiness.updateInfo(this.getUserInfo(token.substring(7)).getUserId(),bo));
+        return new SuccessResponse<>(userBusiness.updateInfo(this.getUserInfo(token).getUserId(),bo));
     }
 
     @PostMapping("/login")
     public SuccessResponse<UserLoginVo> login(@RequestBody @Valid UserLoginBo bo) throws JsonProcessingException {
         return new SuccessResponse<>(userBusiness.login(bo));
+    }
+
+    @PutMapping("/changePassword")
+    public SuccessResponse changePassword(@RequestHeader("Authorization") String token, @RequestBody @Valid ChangePasswordBo bo) throws JsonProcessingException {
+        userBusiness.changePassword(this.getUserInfo(token).getUserId(), bo);
+        return new SuccessResponse();
     }
 }

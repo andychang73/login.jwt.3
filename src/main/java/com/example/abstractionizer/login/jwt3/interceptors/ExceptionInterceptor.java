@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -32,11 +33,19 @@ public class ExceptionInterceptor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus httpStatus, WebRequest request){
         List<String> errors = new ArrayList<>();
         for(FieldError error : ex.getBindingResult().getFieldErrors()){
+            log.error(error.getField() + ": " + error.getDefaultMessage());
             errors.add(error.getField() + ": " + error.getDefaultMessage());
         }
         for(ObjectError error : ex.getBindingResult().getGlobalErrors()){
+            log.error(error.getObjectName() + ": " + error.getDefaultMessage());
             errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
         }
         return this.handleExceptionInternal(ex, new ApiException(HttpStatus.BAD_REQUEST, errors), headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("ex: {}", ex.getMessage());
+        return new ResponseEntity<>(new ApiException(status, ex.getMessage()), headers, status);
     }
 }

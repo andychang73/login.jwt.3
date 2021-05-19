@@ -13,6 +13,6 @@ public class BaseController {
     }
 
     protected UserInfoVo getUserInfo(String token) throws JsonProcessingException {
-        return jwtUtil.getUserInfoFromToken(token);
+        return jwtUtil.getUserInfoFromToken(token.substring(7));
     }
 }

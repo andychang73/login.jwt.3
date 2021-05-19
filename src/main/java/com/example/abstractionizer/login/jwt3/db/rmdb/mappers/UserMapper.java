@@ -8,15 +8,13 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.constraints.Pattern;
-
 @Mapper
 @Repository
 public interface UserMapper extends BaseMapper<User> {
 
     int countByUsername(@Param("username") String username);
 
-    User getByUsername(@Param("username") String username);
+    User getByIdOrUsername(@Param("user_id") Integer userId, @Param("username") String username);
 
     int updateLastLoginTime(@Param("username") String username);
 
@@ -24,5 +22,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     int countByUserIdOrUsername(@Param("user_id") Integer userId, @Param("username") String username);
 
-    UserInfoVo getByUserIdOrUsername(@Param("user_id") Integer userId, @Param("username") String username);
+    UserInfoVo selectByIdOrUsername(@Param("user_id") Integer userId, @Param("username") String username);
+
+    int updatePassword(@Param("user_id") Integer userId, @Param("password") String password);
 }

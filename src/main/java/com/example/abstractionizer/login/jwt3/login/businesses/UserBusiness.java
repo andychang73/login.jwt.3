@@ -1,5 +1,6 @@
 package com.example.abstractionizer.login.jwt3.login.businesses;
 
+import com.example.abstractionizer.login.jwt3.models.bo.ChangePasswordBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserLoginBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserRegisterBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserUpdateBo;
@@ -16,4 +17,6 @@ public interface UserBusiness {
     UserLoginVo login(UserLoginBo bo) throws JsonProcessingException;
 
     UserInfoVo updateInfo(Integer userId, UserUpdateBo bo);
+
+    void changePassword(Integer userId, ChangePasswordBo bo);
 }

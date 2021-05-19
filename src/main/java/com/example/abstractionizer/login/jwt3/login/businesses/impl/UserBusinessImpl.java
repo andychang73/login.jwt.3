@@ -9,6 +9,7 @@ import com.example.abstractionizer.login.jwt3.login.businesses.UserBusiness;
 import com.example.abstractionizer.login.jwt3.login.services.UserLoginService;
 import com.example.abstractionizer.login.jwt3.login.services.UserRegistrationService;
 import com.example.abstractionizer.login.jwt3.login.services.UserService;
+import com.example.abstractionizer.login.jwt3.models.bo.ChangePasswordBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserLoginBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserRegisterBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserUpdateBo;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -66,7 +68,7 @@ public class UserBusinessImpl implements UserBusiness {
 
     @Override
     public UserLoginVo login(UserLoginBo bo) throws JsonProcessingException {
-        User user = userService.getUser(bo.getUsername()).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CREDENTIAL));
+        User user = userService.getUser(null, bo.getUsername()).orElseThrow(() -> new CustomException(ErrorCode.INVALID_CREDENTIAL));
 
         userLoginService.authenticate(bo, user.getPassword());
 
@@ -95,7 +97,23 @@ public class UserBusinessImpl implements UserBusiness {
         }
         userService.updateUserInfo(userId, bo);
 
-        return userService.getUser(userId, null);
+        return userService.getUserInfo(userId, null);
+    }
+
+    @Override
+    public void changePassword(Integer userId, ChangePasswordBo bo) {
+        User user = userService.getUser(userId, null).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(!Objects.equals(MD5Util.md5(bo.getOldPassword()), user.getPassword())){
+            throw new CustomException(ErrorCode.INVALID_CREDENTIAL);
+        }
+        if(Objects.equals(MD5Util.md5(bo.getNewPassword()), user.getPassword())){
+            throw new CustomException(ErrorCode.NEW_OLD_PASSWORD_SAME);
+        }
+        if(!Objects.equals(bo.getNewPassword(), bo.getNewPassword2())){
+            throw new CustomException(ErrorCode.NEW_PASSWORD_INCONSISTENCY);
+        }
+        userService.updatePassword(userId, bo.getNewPassword());
     }
 
 
