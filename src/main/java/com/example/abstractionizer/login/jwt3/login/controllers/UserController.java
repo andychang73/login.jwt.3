@@ -52,4 +52,10 @@ public class UserController extends BaseController{
         userBusiness.changePassword(this.getUserInfo(token).getUserId(), bo);
         return new SuccessResponse();
     }
+
+    @GetMapping("/logOut")
+    public SuccessResponse logOut(@RequestHeader("Authorization") String token){
+        userBusiness.logOut(token.substring(7));
+        return new SuccessResponse();
+    }
 }

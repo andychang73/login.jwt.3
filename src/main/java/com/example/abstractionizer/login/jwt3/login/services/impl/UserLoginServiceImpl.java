@@ -9,7 +9,6 @@ import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
 import com.example.abstractionizer.login.jwt3.utils.JwtUtil;
 import com.example.abstractionizer.login.jwt3.utils.MD5Util;
 import com.example.abstractionizer.login.jwt3.utils.RedisUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +50,16 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
     }
 
+    @Override
+    public void logOut(String token, Long duration) {
+        redisUtil.set(RedisConstant.getUserLogOut(token), token, duration, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public boolean isTokenLoggedOut(String token) {
+        return redisUtil.isKeyExists(RedisConstant.getUserLogOut(token));
+    }
+
     public Long loginFailureCount(String key) {
         Long count = 1L;
         if(redisUtil.isKeyExists(key)){
@@ -58,5 +67,9 @@ public class UserLoginServiceImpl implements UserLoginService {
         }
         redisUtil.set(key, count, 3L, TimeUnit.MINUTES);
         return count;
+    }
+
+    public static void main(String[] args){
+        System.out.println(MD5Util.md5("Abc123456!"));
     }
 }

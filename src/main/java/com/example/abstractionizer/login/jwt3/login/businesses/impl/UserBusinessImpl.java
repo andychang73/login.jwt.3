@@ -15,12 +15,15 @@ import com.example.abstractionizer.login.jwt3.models.bo.UserRegisterBo;
 import com.example.abstractionizer.login.jwt3.models.bo.UserUpdateBo;
 import com.example.abstractionizer.login.jwt3.models.vo.UserInfoVo;
 import com.example.abstractionizer.login.jwt3.models.vo.UserLoginVo;
+import com.example.abstractionizer.login.jwt3.utils.JwtUtil;
 import com.example.abstractionizer.login.jwt3.utils.MD5Util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,6 +35,7 @@ public class UserBusinessImpl implements UserBusiness {
     private final UserService userService;
     private final UserRegistrationService userRegistrationService;
     private final UserLoginService userLoginService;
+    private final JwtUtil jwtUtil;
 
     @Override
     public void register(UserRegisterBo bo) {
@@ -116,9 +120,9 @@ public class UserBusinessImpl implements UserBusiness {
         userService.updatePassword(userId, MD5Util.md5(bo.getNewPassword()));
     }
 
-    public static void main(String[] args){
-        System.out.println(MD5Util.md5("Abc1234567!"));
+    @Override
+    public void logOut(String token) {
+        Long duration = jwtUtil.getExpiration(token).getTime() - new Date().getTime();
+        userLoginService.logOut(token, duration);
     }
-
-
 }

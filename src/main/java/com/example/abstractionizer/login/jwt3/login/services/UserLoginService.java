@@ -13,4 +13,8 @@ public interface UserLoginService {
     boolean isUserCurrentlyLoggedIn(String username);
 
     void authenticate(UserLoginBo bo, String password);
+
+    void logOut(String token, Long duration);
+
+    boolean isTokenLoggedOut(String token);
 }

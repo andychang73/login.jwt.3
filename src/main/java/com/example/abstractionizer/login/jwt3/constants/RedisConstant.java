@@ -6,6 +6,7 @@ public class RedisConstant {
     public static final String USER_VALIDATION = "LOGIN:USER:VALIDATION:%s";
     public static final String LOGGED_IN_USER = "LOGIN:USER:LOGGED_IN:%s";
     public static final String LOGIN_FAILURE_COUNT = "LOGIN:USER:FAILURE:COUNT:%s";
+    public static final String USER_LOG_OUT = "LOGIN:LOGOUT:TOKEN:%s";
 
     public static String getUserRegistrationInfo(String uuid){
         return String.format(USER_REGISTRATION_INFO, uuid);
@@ -21,6 +22,10 @@ public class RedisConstant {
 
     public static String getLoginFailureCount(String username){
         return String.format(LOGIN_FAILURE_COUNT, username);
+    }
+
+    public static String getUserLogOut(String token){
+        return String.format(USER_LOG_OUT, token);
     }
 }
 
